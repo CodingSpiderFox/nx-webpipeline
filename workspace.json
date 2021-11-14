@@ -1,6 +1,35 @@
 {
   "version": 2,
   "projects": {
+    "users": {
+      "root": "libs/users",
+      "sourceRoot": "libs/users/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "libs/users/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/users"
+          ],
+          "options": {
+            "jestConfig": "libs/users/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "webpipeline": {
       "root": "apps/webpipeline",
       "sourceRoot": "apps/webpipeline/src",
@@ -8,7 +37,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/webpipeline",
             "index": "apps/webpipeline/src/index.html",
@@ -20,7 +51,9 @@
               "apps/webpipeline/src/favicon.ico",
               "apps/webpipeline/src/assets"
             ],
-            "styles": ["apps/webpipeline/src/styles.scss"],
+            "styles": [
+              "apps/webpipeline/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -64,16 +97,84 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/webpipeline/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/webpipeline/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/webpipeline"],
+          "outputs": [
+            "coverage/apps/webpipeline"
+          ],
           "options": {
             "jestConfig": "apps/webpipeline/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "webpipeline-api": {
+      "root": "apps/webpipeline-api",
+      "sourceRoot": "apps/webpipeline-api/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/webpipeline-api",
+            "main": "apps/webpipeline-api/src/main.ts",
+            "tsConfig": "apps/webpipeline-api/tsconfig.app.json",
+            "assets": [
+              "apps/webpipeline-api/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/webpipeline-api/src/environments/environment.ts",
+                  "with": "apps/webpipeline-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "webpipeline-api:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "apps/webpipeline-api/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/webpipeline-api"
+          ],
+          "options": {
+            "jestConfig": "apps/webpipeline-api/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -100,89 +201,31 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/webpipeline-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/webpipeline-e2e/**/*.{js,ts}"
+            ]
           }
         }
       },
       "tags": [],
-      "implicitDependencies": ["webpipeline"]
+      "implicitDependencies": [
+        "webpipeline"
+      ]
     },
-    "webpipeline-api": {
-      "root": "apps/webpipeline-api",
-      "sourceRoot": "apps/webpipeline-api/src",
-      "projectType": "application",
+    "workspace": {
+      "root": ".",
       "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+        "version": {
+          "executor": "@jscutlery/semver:version",
           "options": {
-            "outputPath": "dist/apps/webpipeline-api",
-            "main": "apps/webpipeline-api/src/main.ts",
-            "tsConfig": "apps/webpipeline-api/tsconfig.app.json",
-            "assets": ["apps/webpipeline-api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/webpipeline-api/src/environments/environment.ts",
-                  "with": "apps/webpipeline-api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "webpipeline-api:build"
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["apps/webpipeline-api/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/webpipeline-api"],
-          "options": {
-            "jestConfig": "apps/webpipeline-api/jest.config.js",
-            "passWithNoTests": true
+            "syncVersions": true
           }
         }
-      },
-      "tags": []
-    },
-    "users": {
-      "root": "libs/users",
-      "sourceRoot": "libs/users/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["libs/users/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/users"],
-          "options": {
-            "jestConfig": "libs/users/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": []
+      }
     }
   }
 }
